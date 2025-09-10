@@ -1,0 +1,16 @@
+loop:
+  prefix: user
+  count: 1
+
+applicationName: amq-streams
+applicationNamespace: openshift-gitops
+destinationNamespace: kafka
+
+source:
+  repoUrl:
+  targetRevision:
+  path: amq-streams/amq-streams
+
+argocd:
+  enabled: true
+  syncwave: "-1"
