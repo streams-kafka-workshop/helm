@@ -11,6 +11,8 @@ source:
   targetRevision:
   path: amq-streams/amq-streams
 
+subDomain:
+
 argocd:
   enabled: true
   syncwave: "-1"

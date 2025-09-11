@@ -1,0 +1,18 @@
+nameOverride: streams-console
+
+namespace: 
+
+hostName:
+
+kafka:
+  name: kafka
+  namespace: 
+  listener: tls
+  authentication:
+    saslMechanism: 
+  authorization: 
+
+argocd:
+  syncwave:
+    enabled: true
+    console: "1"

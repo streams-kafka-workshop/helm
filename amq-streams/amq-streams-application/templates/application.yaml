@@ -35,4 +35,6 @@ spec:
     path: {{ $.Values.source.path }}
     helm:
       valuesObject:
+        amq-streams-console: 
+          hostName: amq-streams-console-{{ $loop }}.{{ $.Values.subDomain }}          
 {{- end }}
