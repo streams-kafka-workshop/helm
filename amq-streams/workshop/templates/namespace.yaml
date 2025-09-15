@@ -1,0 +1,14 @@
+{{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
+{{- $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
+{{- range $item := $.Values.namespaces }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ $item.name }}-{{ $loop }}
+  labels:
+    argocd.argoproj.io/managed-by: {{ $.Values.gitops.destinationNamespace }}-{{ $loop }}
+  annotations:
+    {{- include "namespace.argocd-syncwave" $ | nindent 4 }}
+{{- end }}
+{{- end }}

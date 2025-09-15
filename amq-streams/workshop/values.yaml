@@ -1,0 +1,37 @@
+loop:
+  prefix: user
+  count: 1
+
+gitops:
+  applicationName: gitops
+  applicationNamespace: openshift-gitops
+  destinationNamespace: gitops
+  source:
+    repoUrl:
+    targetRevision:
+    path: amq-streams/gitops
+  values:
+    name: gitops
+    values:
+      controller:
+        resources:
+          requests:
+            cpu: 100m
+      dex:
+        resources:
+          requests:
+            cpu: 100m
+      repo:
+        resources:
+          requests:
+            cpu: 100m    
+
+namespaces:
+  - name: kafka
+
+argocd:
+  enabled: true
+  namespace:
+    syncwave: "-1"
+  gitops:
+    syncwave: "-1"
