@@ -1,0 +1,6 @@
+workshop:
+  gitops:
+    source:
+      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
+      targetRevision: argo-hub-spoke
+    
