@@ -7,7 +7,7 @@ metadata:
   name: {{ $.Values.gitops.applicationName }}-{{ $loop }}
   namespace: {{ $.Values.gitops.applicationNamespace }}
   annotations:
-    {{- include "gitops.argocd-syncwave" $ | nindent 4 }}
+    {{- include "workshop.gitops.argocd-syncwave" $ | nindent 4 }}
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:

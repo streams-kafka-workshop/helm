@@ -64,7 +64,7 @@ Create the name of the service account to use
 {{/*
 ArgoCD Syncwave
 */}}
-{{- define "namespace.argocd-syncwave" -}}
+{{- define "workshop.namespace.argocd-syncwave" -}}
 {{- if .Values.argocd }}
 {{- if and (.Values.argocd.namespace) (.Values.argocd.namespace.syncwave) (.Values.argocd.enabled) -}}
 argocd.argoproj.io/sync-wave: "{{ .Values.argocd.namespace.syncwave }}"
@@ -79,7 +79,7 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.namespace.syncwave }}"
 {{/*
 ArgoCD Syncwave
 */}}
-{{- define "gitops.argocd-syncwave" -}}
+{{- define "workshop.gitops.argocd-syncwave" -}}
 {{- if .Values.argocd }}
 {{- if and (.Values.argocd.gitops) (.Values.argocd.gitops.syncwave) (.Values.argocd.enabled) -}}
 argocd.argoproj.io/sync-wave: "{{ .Values.argocd.gitops.syncwave }}"
@@ -94,7 +94,7 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.gitops.syncwave }}"
 {{/*
 ArgoCD Syncwave
 */}}
-{{- define "amqstreams.argocd-syncwave" -}}
+{{- define "workshop.amqstreams.argocd-syncwave" -}}
 {{- if .Values.argocd }}
 {{- if and (.Values.argocd.amqstreams) (.Values.argocd.amqstreams.syncwave) (.Values.argocd.enabled) -}}
 argocd.argoproj.io/sync-wave: "{{ .Values.argocd.amqstreams.syncwave }}"
