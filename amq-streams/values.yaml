@@ -3,4 +3,8 @@ workshop:
     source:
       repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
       targetRevision: argo-hub-spoke
+  amqstreams:
+    source:
+      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
+      targetRevision: argo-hub-spoke
     

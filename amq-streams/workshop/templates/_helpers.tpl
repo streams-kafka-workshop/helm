@@ -90,3 +90,18 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.gitops.syncwave }}"
 {{- "{}" }}
 {{- end }}
 {{- end }}
+
+{{/*
+ArgoCD Syncwave
+*/}}
+{{- define "amqstreams.argocd-syncwave" -}}
+{{- if .Values.argocd }}
+{{- if and (.Values.argocd.amqstreams) (.Values.argocd.amqstreams.syncwave) (.Values.argocd.enabled) -}}
+argocd.argoproj.io/sync-wave: "{{ .Values.argocd.amqstreams.syncwave }}"
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- end }}
