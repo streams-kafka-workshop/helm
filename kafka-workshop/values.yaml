@@ -7,4 +7,8 @@ workshop:
     source:
       repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
       targetRevision: argo-hub-spoke
-    
+devspaces:
+  devspaces:
+    source:
+      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
+      targetRevision: devspaces

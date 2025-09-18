@@ -1,0 +1,19 @@
+devspaces:
+  applicationName: devspaces-app
+  applicationNamespace: openshift-gitops
+  destinationNamespace: devspaces
+  source:
+    repoUrl:
+    targetRevision:
+    path: amq-streams/devspaces-app
+  values:
+    loop:
+      prefix: user
+      count: 1
+    subDomain:
+
+argocd:
+  enabled: true
+  devspaces:
+    syncwave: "-1"
+ 

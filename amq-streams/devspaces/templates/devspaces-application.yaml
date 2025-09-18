@@ -1,0 +1,36 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.devspaces.applicationName }}
+  namespace: {{ .Values.devspaces.applicationNamespace }}
+  annotations:
+    {{- include "devspaces.devspaces.argocd-syncwave" . | nindent 4 }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: {{ .Values.devspaces.destinationNamespace }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 10
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  source:
+    repoURL: {{ .Values.devspaces.source.repoUrl }}
+    targetRevision: {{ .Values.devspaces.source.targetRevision }}
+    path: {{ .Values.devspaces.source.path }}
+    helm:
+      valuesObject:
+        {{- toYaml .Values.devspaces.values | nindent 8 }}
