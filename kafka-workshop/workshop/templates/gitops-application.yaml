@@ -1,0 +1,40 @@
+{{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
+{{- $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $.Values.gitops.applicationName }}-{{ $loop }}
+  namespace: {{ $.Values.gitops.applicationNamespace }}
+  annotations:
+    {{- include "workshop.gitops.argocd-syncwave" $ | nindent 4 }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    name: ""
+    namespace: {{ $.Values.gitops.destinationNamespace }}-{{ $loop }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 10
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  source:
+    repoURL: {{ $.Values.gitops.source.repoUrl }}
+    targetRevision: {{ $.Values.gitops.source.targetRevision }}
+    path: {{ $.Values.gitops.source.path }}
+    helm:
+      valuesObject:
+        name: {{ $.Values.gitops.values.name }}-{{ $loop }}
+        {{- toYaml $.Values.gitops.values.values | nindent 8 }}
+{{- end }}
