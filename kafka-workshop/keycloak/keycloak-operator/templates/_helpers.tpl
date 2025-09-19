@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "workshop.name" -}}
+{{- define "keycloak-operator.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "workshop.fullname" -}}
+{{- define "keycloak-operator.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -26,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "workshop.chart" -}}
+{{- define "keycloak-operator.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "workshop.labels" -}}
-helm.sh/chart: {{ include "workshop.chart" . }}
-{{ include "workshop.selectorLabels" . }}
+{{- define "keycloak-operator.labels" -}}
+helm.sh/chart: {{ include "keycloak-operator.chart" . }}
+{{ include "keycloak-operator.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,29 +45,40 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "workshop.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "workshop.name" . }}
+{{- define "keycloak-operator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "keycloak-operator.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "workshop.serviceAccountName" -}}
+{{- define "keycloak-operator.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "workshop.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "keycloak-operator.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
 {{/*
+Determine target namespace
+*/}}
+{{- define "keycloak-operator.namespace" -}}
+{{- if .Values.namespace }}
+{{- printf "%s" .Values.namespace}}
+{{- else }}
+{{- printf "%s" .Release.Namespace }}
+{{- end }}
+{{- end }}
+
+{{/*
 ArgoCD Syncwave
 */}}
-{{- define "workshop.namespace.argocd-syncwave" -}}
+{{- define "keycloak-operator.argocd-syncwave" -}}
 {{- if .Values.argocd }}
-{{- if and (.Values.argocd.namespace) (.Values.argocd.namespace.syncwave) (.Values.argocd.enabled) -}}
-argocd.argoproj.io/sync-wave: "{{ .Values.argocd.namespace.syncwave }}"
+{{- if and (.Values.argocd.operator.syncwave) (.Values.argocd.enabled) -}}
+argocd.argoproj.io/sync-wave: "{{ .Values.argocd.operator.syncwave }}"
 {{- else }}
 {{- "{}" }}
 {{- end }}
@@ -79,40 +90,10 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.namespace.syncwave }}"
 {{/*
 ArgoCD Syncwave
 */}}
-{{- define "workshop.gitops.argocd-syncwave" -}}
+{{- define "keycloak-operatorgroup.argocd-syncwave" -}}
 {{- if .Values.argocd }}
-{{- if and (.Values.argocd.gitops) (.Values.argocd.gitops.syncwave) (.Values.argocd.enabled) -}}
-argocd.argoproj.io/sync-wave: "{{ .Values.argocd.gitops.syncwave }}"
-{{- else }}
-{{- "{}" }}
-{{- end }}
-{{- else }}
-{{- "{}" }}
-{{- end }}
-{{- end }}
-
-{{/*
-ArgoCD Syncwave
-*/}}
-{{- define "workshop.amqstreams.argocd-syncwave" -}}
-{{- if .Values.argocd }}
-{{- if and (.Values.argocd.amqstreams) (.Values.argocd.amqstreams.syncwave) (.Values.argocd.enabled) -}}
-argocd.argoproj.io/sync-wave: "{{ .Values.argocd.amqstreams.syncwave }}"
-{{- else }}
-{{- "{}" }}
-{{- end }}
-{{- else }}
-{{- "{}" }}
-{{- end }}
-{{- end }}
-
-{{/*
-ArgoCD Syncwave
-*/}}
-{{- define "workshop.keycloak.argocd-syncwave" -}}
-{{- if .Values.argocd }}
-{{- if and (.Values.argocd.keycloak) (.Values.argocd.keycloak.syncwave) (.Values.argocd.enabled) -}}
-argocd.argoproj.io/sync-wave: "{{ .Values.argocd.keycloak.syncwave }}"
+{{- if and (.Values.argocd.operatorgroup.syncwave) (.Values.argocd.enabled) -}}
+argocd.argoproj.io/sync-wave: "{{ .Values.argocd.operatorgroup.syncwave }}"
 {{- else }}
 {{- "{}" }}
 {{- end }}

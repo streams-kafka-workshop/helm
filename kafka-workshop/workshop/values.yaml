@@ -28,8 +28,15 @@ gitops:
           requests:
             cpu: 100m
 
-namespaces:
-  - name: kafka
+keycloak:
+  applicationName: rhbk
+  applicationNamespace: openshift-gitops
+  destinationNamespace: rhbk
+  source:
+    repoUrl:
+    targetRevision:
+    path: kafka-workshop/keycloak
+  values:
 
 amqstreams:
   applicationName: amq-streams
@@ -40,6 +47,9 @@ amqstreams:
     targetRevision:
     path: kafka-workshop/amq-streams
 
+namespaces:
+  - name: kafka
+
 argocd:
   enabled: true
   namespace:
@@ -48,3 +58,5 @@ argocd:
     syncwave: "-1" 
   amqstreams:
     syncwave: "0"
+  keycloak:
+    syncwave: "-1"

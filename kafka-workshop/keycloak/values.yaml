@@ -1,0 +1,15 @@
+keycloak-operator:
+  argocd:
+    enabled: true
+    operatorgroup:
+      syncwave: "-3"
+    operator:
+      syncwave: "-2"
+keycloak-db:
+  argocd:
+    enabled: true
+    syncwave: "-3"
+keycloak:
+  argocd:
+    enabled: true
+    syncwave: "-1"
