@@ -5,7 +5,7 @@ devspaces:
   source:
     repoUrl:
     targetRevision:
-    path: amq-streams/devspaces-app
+    path: kafka-workshop/devspaces-app
   values:
     loop:
       prefix: user
