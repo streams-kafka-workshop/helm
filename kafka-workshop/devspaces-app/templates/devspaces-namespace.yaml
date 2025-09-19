@@ -1,0 +1,14 @@
+{{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
+{{- $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: '{{ $.Values.devspaces.namespace }}-{{ $loop }}'
+  labels:
+    app.kubernetes.io/component: devspaces-namespace
+    app.kubernetes.io/part-of: che.eclipse.org
+  annotations:
+    che.eclipse.org/username: {{ $loop }}
+    {{- include "devspaces-app.devspacesNamespace.argocd-syncwave" $ | nindent 4 }}
+{{- end }}

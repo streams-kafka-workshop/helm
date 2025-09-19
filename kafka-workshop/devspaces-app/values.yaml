@@ -1,0 +1,27 @@
+loop:
+  prefix: user
+  count: 1
+
+checluster:
+  namespace: devspaces
+  name: devspaces
+  namespaceTemplate: devspaces-<username>
+
+devspaces:
+  namespace: devspaces
+  templateName: che-code-workspace
+  workspaceName: kafka-workshop
+  image: quay.io/kafka-workshop/devspaces-image:0e90287
+
+subDomain:
+
+argocd:
+  enabled: true
+  checluster:
+    syncwave: "0"
+  devspacesNamespace:
+    syncwave: "1"
+  devworkspaceTemplate:
+    syncwave: "2"
+  devworkspace:
+    syncwave: "3"

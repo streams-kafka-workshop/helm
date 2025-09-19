@@ -11,6 +11,12 @@ dependencies:
   - name: amq-streams-console-operator
     version: 0.1.0
     repository: file://amq-streams-console-operator
+  - name: devspaces-operator
+    version: 0.1.0
+    repository: file://devspaces-operator
+  - name: devspaces
+    version: 0.1.0
+    repository: file://devspaces
   - name: workshop
     version: 0.1.0
     repository: file://workshop

@@ -1,0 +1,27 @@
+apiVersion: org.eclipse.che/v2
+kind: CheCluster
+metadata:
+  name: {{ .Values.checluster.name }}
+  namespace: {{ .Values.checluster.namespace }}
+  annotations:
+    {{- include "devspaces-app.checluster.argocd-syncwave" $ | nindent 4 }}
+spec:
+  devEnvironments:
+    defaultNamespace:
+      autoProvision: true
+      template: {{ .Values.checluster.namespaceTemplate }}
+    storage:
+      pvcStrategy: per-user
+    secondsOfInactivityBeforeIdling: -1
+    defaultEditor: che-incubator/che-code/latest
+    containerBuildConfiguration:
+      openShiftSecurityContextConstraint: container-build
+    disableContainerBuildCapabilities: true
+  components:
+    cheServer:
+      debug: false
+      logLevel: INFO
+    metrics:
+      enable: true
+  gitServices: {}
+  networking: {}

@@ -1,0 +1,83 @@
+{{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
+{{- $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
+---
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  name: {{ $.Values.devspaces.workspaceName }}
+  namespace: {{ $.Values.devspaces.namespace }}-{{ $loop }}
+  annotations:
+    {{- include "devspaces-app.devworkspace.argocd-syncwave" $ | nindent 4 }}
+spec:
+  contributions:
+    - kubernetes:
+        name: {{ $.Values.devspaces.templateName }}
+        namespace: {{ $.Values.devspaces.namespace }}-{{ $loop }}
+      name: {{ $.Values.devspaces.templateName }}
+  routingClass: che
+  started: true
+  template:
+    attributes:
+      controller.devfile.io/storage-type: ephemeral
+    components:
+      - name: tools
+        container:
+          cpuRequest: 60m
+          command:
+            - /checode/entrypoint-volume.sh
+          env:
+            - name: CHE_DASHBOARD_URL
+              value: 'https://devspaces.{{ $.Values.subDomain }}'
+            - name: CHE_PLUGIN_REGISTRY_URL
+              value: >-
+                https://devspaces.{{ $.Values.subDomain }}/plugin-registry/v3
+            - name: CHE_PLUGIN_REGISTRY_INTERNAL_URL
+              value: 'http://plugin-registry.{{ $.Values.checluster.namespace }}.svc:8080/v3'
+            - name: OPENVSX_REGISTRY_URL
+              value: 'https://open-vsx.org'
+          memoryRequest: 512Mi
+          sourceMapping: /projects
+          cpuLimit: 1000m
+          volumeMounts:
+            - name: checode
+              path: /checode
+          memoryLimit: 2.07G
+          image: {{ $.Values.devspaces.image }}
+          endpoints:
+            - attributes:
+                contributed-by: che-code.eclipse.org
+                cookiesAuthEnabled: true
+                discoverable: false
+                type: main
+                urlRewriteSupported: true
+              exposure: public
+              name: che-code
+              protocol: https
+              secure: false
+              targetPort: 3100
+            - attributes:
+                contributed-by: che-code.eclipse.org
+                discoverable: false
+                urlRewriteSupported: false
+              exposure: public
+              name: code-redirect-1
+              protocol: http
+              targetPort: 13131
+            - attributes:
+                contributed-by: che-code.eclipse.org
+                discoverable: false
+                urlRewriteSupported: false
+              exposure: public
+              name: code-redirect-2
+              protocol: http
+              targetPort: 13132
+            - attributes:
+                contributed-by: che-code.eclipse.org
+                discoverable: false
+                urlRewriteSupported: false
+              exposure: public
+              name: code-redirect-3
+              protocol: http
+              targetPort: 13133
+    projects: []
+{{- end }}
