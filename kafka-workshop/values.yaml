@@ -1,14 +1,14 @@
 workshop:
   gitops:
     source:
-      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
-      targetRevision: devspaces
+      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      targetRevision: main
   amqstreams:
     source:
-      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
-      targetRevision: devspaces
+      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      targetRevision: main
 devspaces:
   devspaces:
     source:
-      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
-      targetRevision: devspaces
+      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      targetRevision: main
