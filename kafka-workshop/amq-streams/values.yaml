@@ -1,0 +1,10 @@
+kafka-broker:
+  argocd:
+    syncwave:
+      kafka: "0"
+      namespace: "-1"
+
+amq-streams-console:
+  argocd:
+    syncwave:
+      console: "1"

@@ -7,8 +7,32 @@ workshop:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
       targetRevision: main
+  argocd:
+    namespace:
+      syncwave: "-1"
+    gitops:
+      syncwave: "-1" 
+    amqstreams:
+      syncwave: "0"
+
 devspaces:
   devspaces:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
       targetRevision: main
+  argocd:
+    devspaces:
+      syncwave: "-1"
+
+amq-streams-operator:
+  argocd:
+    operator:
+      syncwave: "-2"
+amq-streams-console-operator:
+  argocd:
+    operator:
+      syncwave: "-2"
+devspaces-operator:
+  argocd:
+    operator:
+      syncwave: "-2"
