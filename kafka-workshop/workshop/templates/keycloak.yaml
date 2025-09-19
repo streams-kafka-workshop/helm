@@ -37,4 +37,8 @@ spec:
       valuesObject:
         keycloak:
           subDomain: {{ .Values.subDomain }}
+        keycloak-realm-import:
+          loop:
+            prefix: {{ .Values.loop.prefix }}
+            count: {{ .Values.loop.count }}
           

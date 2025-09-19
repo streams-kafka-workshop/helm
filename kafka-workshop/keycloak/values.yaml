@@ -13,3 +13,7 @@ keycloak:
   argocd:
     enabled: true
     syncwave: "-1"
+keycloak-realm-import:
+  argocd:
+    enabled: true
+    syncwave: "0"
