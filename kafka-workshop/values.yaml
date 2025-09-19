@@ -7,6 +7,10 @@ workshop:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
       targetRevision: main
+  keycloak:
+    source:
+      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
+      targetRevision: keycloak
   argocd:
     namespace:
       syncwave: "-1"
@@ -14,6 +18,8 @@ workshop:
       syncwave: "-1" 
     amqstreams:
       syncwave: "0"
+    keycloak:
+      syncwave: "-1"
 
 devspaces:
   devspaces:

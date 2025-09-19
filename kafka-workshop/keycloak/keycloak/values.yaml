@@ -1,0 +1,27 @@
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  port: 8080
+
+subDomain: 
+
+route:
+  enabled: true
+  host: sso
+  tlsEnabled: true
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+database:
+  vendor: postgres
+  host: keycloak-db
+  secret: keycloak-db
+
+ingress:
+  enabled: false
+
+argocd:
+  enabled: true
+  syncwave: "-1"

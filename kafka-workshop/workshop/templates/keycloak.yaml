@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.keycloak.applicationName }}
+  namespace: {{ .Values.keycloak.applicationNamespace }}
+  annotations:
+    {{- include "workshop.keycloak.argocd-syncwave" $ | nindent 4 }}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  ignoreDifferences:
+    - group: k8s.keycloak.org
+      kind: KeycloakRealmImport
+      jqPathExpressions: 
+        - .. | (.id, .containerId, .secret)? | strings
+  destination:
+    name: ""
+    namespace: {{ .Values.keycloak.destinationNamespace }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  syncPolicy:
+    automated: {}
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 10
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  source:
+    repoURL: {{ .Values.keycloak.source.repoUrl }}
+    targetRevision: {{ .Values.keycloak.source.targetRevision }}
+    path: {{ .Values.keycloak.source.path }}
+    helm:
+      valuesObject:
+        keycloak:
+          subDomain: {{ .Values.subDomain }}
+        keycloak-realm-import:
+          loop:
+            prefix: {{ .Values.loop.prefix }}
+            count: {{ .Values.loop.count }}
+          
