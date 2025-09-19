@@ -11,7 +11,7 @@ gitops:
   source:
     repoUrl:
     targetRevision:
-    path: amq-streams/gitops
+    path: kafka-workshop/gitops
   values:
     name: gitops
     values:
@@ -38,7 +38,7 @@ amqstreams:
   source:
     repoUrl:
     targetRevision:
-    path: amq-streams/amq-streams
+    path: kafka-workshop/amq-streams
 
 argocd:
   enabled: true

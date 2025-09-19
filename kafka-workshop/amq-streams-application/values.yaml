@@ -9,7 +9,7 @@ destinationNamespace: kafka
 source:
   repoUrl:
   targetRevision:
-  path: amq-streams/amq-streams
+  path: kafka-workshop/amq-streams
 
 subDomain:
 
