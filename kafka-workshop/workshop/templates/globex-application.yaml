@@ -40,4 +40,7 @@ spec:
         activity-tracking:
           kafka:
             bootstrapServer: kafka-kafka-bootstrap.{{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}.svc.cluster.local:9092
+        recommendation-engine:
+          kafka:
+            bootstrapServer: kafka-kafka-bootstrap.{{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}.svc.cluster.local:9092
 {{- end }}

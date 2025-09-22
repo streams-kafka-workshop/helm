@@ -17,3 +17,6 @@ dependencies:
   - name: activity-tracking
     version: 0.1.0
     repository: file://activity-tracking
+  - name: recommendation-engine
+    version: 0.1.0
+    repository: file://recommendation-engine

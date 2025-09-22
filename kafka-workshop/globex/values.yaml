@@ -14,3 +14,7 @@ activity-tracking:
   argocd:
     enabled: true
     syncwave: "0"
+recommendation-engine:
+  argocd:
+    enabled: true
+    syncwave: "0"
