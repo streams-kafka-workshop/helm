@@ -18,3 +18,7 @@ recommendation-engine:
   argocd:
     enabled: true
     syncwave: "0"
+globex-web:
+  argocd:
+    enabled: true
+    syncwave: "0"

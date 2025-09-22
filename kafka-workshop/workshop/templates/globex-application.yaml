@@ -43,4 +43,10 @@ spec:
         recommendation-engine:
           kafka:
             bootstrapServer: kafka-kafka-bootstrap.{{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}.svc.cluster.local:9092
+        globex-web:
+          sso:
+            url: "https://{{ $.Values.keycloak.values.host }}.{{ $.Values.subDomain }}/realms/{{ $.Values.keycloak.values.realm }}-{{ $loop }}"
+            client: {{ $.Values.keycloak.values.client }}
+            logoutUri: https://globex-web-{{ $.Values.globex.destinationNamespace }}-{{ $loop }}.{{ $.Values.subDomain }}/home
+            logLevel: "2"
 {{- end }}

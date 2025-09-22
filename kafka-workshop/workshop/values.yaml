@@ -37,6 +37,9 @@ keycloak:
     targetRevision:
     path: kafka-workshop/keycloak
   values:
+    host: sso
+    realm: globex
+    client: globex-web-gateway
 
 amqstreams:
   applicationName: amq-streams

@@ -37,8 +37,14 @@ spec:
       valuesObject:
         keycloak:
           subDomain: {{ .Values.subDomain }}
+          route:
+            host: {{ .Values.keycloak.values.host }}
         keycloak-realm-import:
           loop:
             prefix: {{ .Values.loop.prefix }}
             count: {{ .Values.loop.count }}
+          realm:
+            name: {{ .Values.keycloak.values.realm }}
+          client:
+            gateway: {{ .Values.keycloak.values.client }}
           
