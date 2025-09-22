@@ -14,3 +14,6 @@ dependencies:
   - name: kafka-topics
     version: 0.1.0
     repository: file://kafka-topics
+  - name: activity-tracking
+    version: 0.1.0
+    repository: file://activity-tracking

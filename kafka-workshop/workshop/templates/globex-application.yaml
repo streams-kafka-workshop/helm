@@ -37,4 +37,7 @@ spec:
         kafka-topics:
           kafka:
             namespace: {{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}
+        activity-tracking:
+          kafka:
+            bootstrapServer: kafka-kafka-bootstrap.{{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}.svc.cluster.local:9092
 {{- end }}

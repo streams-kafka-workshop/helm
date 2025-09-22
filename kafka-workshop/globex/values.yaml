@@ -10,3 +10,7 @@ kafka-topics:
   argocd:
     enabled: true
     syncwave: "-2"
+activity-tracking:
+  argocd:
+    enabled: true
+    syncwave: "0"
