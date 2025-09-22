@@ -34,4 +34,7 @@ spec:
     path: {{ $.Values.globex.source.path }}
     helm:
       valuesObject:
+        kafka-topics:
+          kafka:
+            namespace: {{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}
 {{- end }}

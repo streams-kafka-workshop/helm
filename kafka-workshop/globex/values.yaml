@@ -6,3 +6,7 @@ globex-store-app:
   argocd:
     enabled: true
     syncwave: "0"
+kafka-topics:
+  argocd:
+    enabled: true
+    syncwave: "-2"
