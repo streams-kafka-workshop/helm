@@ -2,3 +2,7 @@ globex-db:
   argocd:
     enabled: true
     syncwave: "-2"
+globex-store-app:
+  argocd:
+    enabled: true
+    syncwave: "0"
