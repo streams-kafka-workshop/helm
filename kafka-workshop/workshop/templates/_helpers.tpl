@@ -120,3 +120,18 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.keycloak.syncwave }}"
 {{- "{}" }}
 {{- end }}
 {{- end }}
+
+{{/*
+ArgoCD Syncwave
+*/}}
+{{- define "workshop.globex.argocd-syncwave" -}}
+{{- if .Values.argocd }}
+{{- if and (.Values.argocd.globex) (.Values.argocd.globex.syncwave) (.Values.argocd.enabled) -}}
+argocd.argoproj.io/sync-wave: "{{ .Values.argocd.globex.syncwave }}"
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- end }}

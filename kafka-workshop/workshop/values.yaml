@@ -47,8 +47,18 @@ amqstreams:
     targetRevision:
     path: kafka-workshop/amq-streams
 
+globex:
+  applicationName: globex
+  applicationNamespace: gitops
+  destinationNamespace: globex
+  source:
+    repoUrl:
+    targetRevision:
+    path: kafka-workshop/globex
+
 namespaces:
   - name: kafka
+  - name: globex
 
 argocd:
   enabled: true
@@ -60,3 +70,5 @@ argocd:
     syncwave: "0"
   keycloak:
     syncwave: "-1"
+  globex:
+    syncwave: "1"
