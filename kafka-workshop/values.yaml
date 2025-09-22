@@ -13,8 +13,8 @@ workshop:
       targetRevision: main
   globex:
     source:
-      repoUrl: https://github.com/btison/streams-kafka-workshop-helm.git
-      targetRevision: globex
+      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      targetRevision: main
   argocd:
     namespace:
       syncwave: "-1"
