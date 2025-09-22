@@ -1,0 +1,4 @@
+globex-db:
+  argocd:
+    enabled: true
+    syncwave: "-2"
