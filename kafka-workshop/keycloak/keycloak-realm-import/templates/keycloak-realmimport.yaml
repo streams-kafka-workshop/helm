@@ -12,6 +12,9 @@ metadata:
   labels:
     {{- include "keycloak-realmimport.labels" $ | nindent 4 }}
     app: keycloak
+  annotations:
+    {{- include "keycloak-realmimport.argocd-syncwave" $ | nindent 4 }}
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   keycloakCRName: {{ $.Values.keycloak.name }}
   realm:
