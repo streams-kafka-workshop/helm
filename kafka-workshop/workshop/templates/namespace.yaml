@@ -8,6 +8,8 @@ metadata:
   name: {{ $item.name }}-{{ $loop }}
   labels:
     argocd.argoproj.io/managed-by: {{ $.Values.gitops.destinationNamespace }}-{{ $loop }}
+    pod-security.kubernetes.io/warn: privileged
+    pod-security.kubernetes.io/warn-version: latest
   annotations:
     {{- include "workshop.namespace.argocd-syncwave" $ | nindent 4 }}
 {{- end }}
