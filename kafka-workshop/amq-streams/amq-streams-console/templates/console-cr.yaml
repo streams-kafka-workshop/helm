@@ -23,7 +23,7 @@ spec:
       properties:
         values: []
         valuesFrom: []
-{{- if eq .Values.kafka.authentication.saslMechanism "SCRAM-SHA-512" -}}
+{{- if eq .Values.kafka.authentication.saslMechanism "SCRAM-SHA-512" }}
       credentials:
         kafkaUser:
           name: {{ include "amq-streams-console.name" . }}-kafka-user
