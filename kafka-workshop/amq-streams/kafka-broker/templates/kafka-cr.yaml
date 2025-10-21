@@ -19,6 +19,10 @@ spec:
     {{- if eq .Values.authorization "simple" }}
     authorization:
       type: simple
+    {{- if .Values.kafka.listener.secure.enabled }}
+      superUsers:
+        - ANONYMOUS
+    {{- end }}
     {{- end }}
     listeners:
     - name: plain
