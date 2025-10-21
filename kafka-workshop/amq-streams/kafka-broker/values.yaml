@@ -48,6 +48,8 @@ kafka:
           value:
             crt:
             key: 
+    secure:
+      enabled: true
   entityOperator:
     topicOperator:
       resources:
@@ -75,7 +77,11 @@ kafka:
 
 namespace:
 
-authentication: {}
+authentication:
+  clientId: admin
+  clientSecret: adminpassword
+  securityProtocol: SASL_PLAINTEXT
+  saslMechanism: SCRAM-SHA-512
 
 authorization: simple
 
