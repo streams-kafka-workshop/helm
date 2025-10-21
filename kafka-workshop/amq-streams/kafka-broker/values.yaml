@@ -5,6 +5,13 @@ kafka:
   metadataVersion: 4.0-IV3
   broker:
     replicas: 3
+    storage:
+      type: jbod
+      volumes:
+        - id: 0
+          type: persistent-claim
+          size: 10Gi
+          deleteClaim: true
   controller:
     enabled: true
     replicas: 3
@@ -15,6 +22,13 @@ kafka:
       requests:
         cpu: 100m
         memory: 200M
+    storage:
+      type: jbod
+      volumes:
+        - id: 0
+          type: persistent-claim
+          size: 5Gi
+          deleteClaim: true      
   config:
     autoCreateTopics: false
     defaultReplicationFactor: 3

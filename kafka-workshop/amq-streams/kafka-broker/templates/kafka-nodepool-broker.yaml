@@ -18,10 +18,5 @@ spec:
   resources:
     {{- toYaml .Values.kafka.resources | nindent 4 }}
   storage:
-    type: jbod
-    volumes:
-      - id: 0
-        type: persistent-claim
-        size: 50Gi
-        deleteClaim: true
+    {{- toYaml .Values.kafka.broker.storage | nindent 4 }}
 {{ end }}
