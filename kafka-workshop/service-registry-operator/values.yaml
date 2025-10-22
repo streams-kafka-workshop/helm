@@ -1,0 +1,16 @@
+nameOverride: "apicurio-registry-3"
+fullnameOverride: ""
+
+namespace: openshift-operators
+
+subscription:
+  channel: 3.x
+  installPlanApproval: Automatic
+  name: apicurio-registry-3
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+
+argocd:
+  enabled: true
+  operator:
+    syncwave: "-2"

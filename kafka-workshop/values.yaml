@@ -48,3 +48,7 @@ devspaces-operator:
   argocd:
     operator:
       syncwave: "-2"
+service-registry-operator:
+  argocd:
+    operator:
+      syncwave: "-2"
