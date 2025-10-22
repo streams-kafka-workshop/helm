@@ -17,6 +17,9 @@ dependencies:
   - name: devspaces
     version: 0.1.0
     repository: file://devspaces
+  - name: service-registry-operator
+    version: 0.1.0
+    repository: file://service-registry-operator
   - name: workshop
     version: 0.1.0
     repository: file://workshop

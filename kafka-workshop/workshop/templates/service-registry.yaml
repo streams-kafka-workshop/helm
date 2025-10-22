@@ -1,0 +1,45 @@
+{{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
+{{ $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $.Values.service_registry.applicationName }}-{{ $loop }}
+  namespace: {{ $.Values.service_registry.applicationNamespace }}-{{ $loop }}
+  annotations:
+    {{- include "workshop.service_registry.argocd-syncwave" $ | nindent 4 }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  destination:
+    name: ""
+    namespace: {{ $.Values.service_registry.destinationNamespace }}-{{ $loop }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 10
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  source:
+    repoURL: {{ $.Values.service_registry.source.repoUrl }}
+    targetRevision: {{ $.Values.service_registry.source.targetRevision }}
+    path: {{ $.Values.service_registry.source.path }}
+    helm:
+      valuesObject:
+        service-registry:
+          app:
+            route:
+              host: service-registry-app-{{ $loop }}.{{ $.Values.subDomain }}
+          ui:
+            route:
+              host: service-registry-ui-{{ $loop }}.{{ $.Values.subDomain }}
+{{- end }}

@@ -1,0 +1,24 @@
+{{- if .Values.ui.route.enabled -}}
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ include "service-registry.name" . }}-ui
+  namespace: {{ include "service-registry.namespace" . }}
+  labels:
+    {{- include "service-registry.labels" . | nindent 4 }}
+  annotations:
+    {{- include "service-registry.argocd-syncwave" . | nindent 4 }}
+spec:
+  {{ if .Values.ui.route.host }}
+  host: {{ .Values.ui.route.host }}
+  {{ end }}
+  to:
+    kind: Service
+    name: {{ include "service-registry.name" . }}-ui-service
+    weight: 100
+  wildcardPolicy: None
+  {{- if .Values.ui.route.tlsEnabled }}
+  tls:
+    {{- toYaml .Values.ui.route.tls | nindent 4 }}
+  {{ end }}
+{{ end }}

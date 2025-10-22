@@ -135,3 +135,18 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.globex.syncwave }}"
 {{- "{}" }}
 {{- end }}
 {{- end }}
+
+{{/*
+ArgoCD Syncwave
+*/}}
+{{- define "workshop.service_registry.argocd-syncwave" -}}
+{{- if .Values.argocd }}
+{{- if and (.Values.argocd.service_registry) (.Values.argocd.service_registry.syncwave) (.Values.argocd.enabled) -}}
+argocd.argoproj.io/sync-wave: "{{ .Values.argocd.service_registry.syncwave }}"
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- end }}
