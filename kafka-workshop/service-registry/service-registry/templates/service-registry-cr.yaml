@@ -1,0 +1,45 @@
+apiVersion: registry.apicur.io/v1
+kind: ApicurioRegistry3
+metadata:
+  name: {{ include "service-registry.name" . }}
+  namespace: {{ include "service-registry.namespace" . }}
+  labels:
+    {{- include "service-registry.labels" . | nindent 4 }}
+  annotations:
+    {{- include "service-registry.argocd-syncwave" . | nindent 4 }}
+spec:
+  app:
+    storage:
+      type: postgresql
+      sql:
+        dataSource:
+          url: "jdbc:postgresql://{{ .Values.pgsql.service }}.{{ .Release.Namespace }}.svc:5432/{{ .Values.pgsql.database }}"
+          username: {{ .Values.pgsql.user }}
+          password:
+            name: {{ include "service-registry.name" . }}    
+    ingress:
+      {{ if .Values.app.route.host }}
+      host: {{ .Values.app.route.host }}
+      {{ end }}
+      enabled: {{ .Values.app.ingress.enabled }}
+    podTemplateSpec:
+      spec:
+        containers:
+          - name: apicurio-registry-app
+            resources:
+              {{- toYaml .Values.app.resources | nindent 14 }}
+  ui:  
+    ingress:
+      {{ if .Values.ui.route.host }}
+      host: {{ .Values.ui.route.host }}
+      {{ end }}
+      enabled: {{ .Values.ui.ingress.enabled }}
+    env:
+      - name: REGISTRY_API_URL
+        value: 'https://{{ .Values.app.route.host }}/apis/registry/v3'
+    podTemplateSpec:
+      spec:
+        containers:
+          - name: apicurio-registry-ui
+            resources:
+              {{- toYaml .Values.ui.resources | nindent 14 }}

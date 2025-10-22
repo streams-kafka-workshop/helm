@@ -1,0 +1,45 @@
+pgsql:
+  service: service-registry-db
+  database: apicurio
+  user: apicurio
+  password: apicurio
+
+app:
+  route:
+    enabled: true
+    host: 
+    tlsEnabled: true
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+  ingress:
+    enabled: false
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 125m
+      memory: 512Mi
+
+ui:
+  route:
+    enabled: true
+    host: 
+    tlsEnabled: true
+    tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+  ingress:
+    enabled: false
+  resources:
+    limits:
+      cpu: 250m
+      memory: 512Mi
+    requests:
+      cpu: 125m
+      memory: 512Mi
+
+argocd:
+  enabled: true
+  syncwave: "-1"
