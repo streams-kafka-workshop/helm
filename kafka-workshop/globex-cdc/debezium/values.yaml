@@ -13,6 +13,6 @@ connectors:
     table:
       includeList: public.customer,public.orders,public.line_item
     topic:
-      replicationFactor: 2
+      replicationFactor: 3
       partitions: 1
     decimalHandlingMode: string
