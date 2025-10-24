@@ -19,6 +19,10 @@ workshop:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
       targetRevision: main
+  globex_cdc:
+    source:
+      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      targetRevision: main
   argocd:
     namespace:
       syncwave: "-1"
@@ -32,6 +36,8 @@ workshop:
       syncwave: "1"
     service_registry:
       syncwave: "1"
+    globex_cdc:
+      syncwave: "2"
 
 devspaces:
   devspaces:

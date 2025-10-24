@@ -68,10 +68,20 @@ service_registry:
     targetRevision:
     path: kafka-workshop/service-registry
 
+globex_cdc:
+  applicationName: globex-cdc
+  applicationNamespace: gitops
+  destinationNamespace: globex-cdc
+  source:
+    repoUrl:
+    targetRevision:
+    path: kafka-workshop/globex-cdc
+
 namespaces:
   - name: kafka
   - name: globex
   - name: service-registry
+  - name: globex-cdc
 
 argocd:
   enabled: true
@@ -87,3 +97,5 @@ argocd:
     syncwave: "1"
   service_registry:
     syncwave: "1"
+  globex_cdc:
+    syncwave: "2"

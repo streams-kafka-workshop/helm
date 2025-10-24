@@ -1,0 +1,53 @@
+version: 4.0.0
+image: quay.io/cloud-architecture-workshop/kafka-connect-image:kafka-4.0-debezium-postgres-3.3.1.Final
+replicas: 1
+topicPrefix: globex-cdc
+keyConverter: org.apache.kafka.connect.json.JsonConverter
+valueConverter: org.apache.kafka.connect.json.JsonConverter
+replicationFactor: 3
+authentication:
+  passwordKey: clientSecret
+resources:
+  requests:
+    cpu: 100m
+    memory: 250Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+livenessProbe:
+  initialDelaySeconds: 45
+  timeoutSeconds: 5
+readinessProbe:
+  initialDelaySeconds: 15
+  timeoutSeconds: 5
+
+kafka:
+  namespace: ""
+  broker: ""
+  bootstrapServer: ""
+  securityProtocol: ""
+  saslMechanism: ""
+  clientId: ""
+
+argocd:
+  enabled: true
+  syncwave: "-1"
+
+hook:
+  enabled: false
+  image:
+    repository: quay.io/cloud-architecture-workshop/kafkaconnect-patch-job
+    pullPolicy: IfNotPresent
+    tag: "e1e2152-native"
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+  argocd:
+    enabled: true
+    syncwave: "0"
