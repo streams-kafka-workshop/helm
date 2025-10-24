@@ -1,0 +1,41 @@
+{{- range untilStep 0 (.Values.loop.count | int64 | int) 1 }}
+{{ $loop := printf "%s%s" $.Values.loop.prefix ((add . 1) | toString) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $.Values.globex_cdc.applicationName }}-{{ $loop }}
+  namespace: {{ $.Values.globex_cdc.applicationNamespace }}-{{ $loop }}
+  annotations:
+    {{- include "workshop.globex_cdc.argocd-syncwave" $ | nindent 4 }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  destination:
+    name: ""
+    namespace: {{ $.Values.globex_cdc.destinationNamespace }}-{{ $loop }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 10
+    syncOptions:
+      - CreateNamespace=true
+      - RespectIgnoreDifferences=true
+  source:
+    repoURL: {{ $.Values.globex_cdc.source.repoUrl }}
+    targetRevision: {{ $.Values.globex_cdc.source.targetRevision }}
+    path: {{ $.Values.globex_cdc.source.path }}
+    helm:
+      valuesObject:
+        kafka-connect:
+          kafka:
+            bootstrapServer: kafka-kafka-bootstrap.{{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}.svc.cluster.local:9092
+{{- end }}
