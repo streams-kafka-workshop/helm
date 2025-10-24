@@ -1,0 +1,28 @@
+debezium:
+  deploy: true
+
+kafka:
+  namespace:
+
+hook:
+  enabled: false
+  image:
+    repository: quay.io/cloud-architecture-workshop/kafka-client-connection-secret-job
+    pullPolicy: IfNotPresent
+    tag: "4be872f-native"
+  serviceAccount:
+    create: true
+    name: ""
+  podSecurityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+ 
+argocd:
+  enabled: true
+  syncwave: "-2"
