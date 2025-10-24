@@ -1,0 +1,18 @@
+connectors:
+  globex:
+    kafkaConnect: kafka-connect
+    database:
+      hostname: 
+      port: 5432
+      user: debezium
+      password: debezium
+      dbname: globex
+      topicPrefix: globex
+    schema:
+      includeList: public
+    table:
+      includeList: public.customer,public.orders,public.line_item
+    topic:
+      replicationFactor: 2
+      partitions: 1
+    decimalHandlingMode: string
