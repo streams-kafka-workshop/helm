@@ -38,4 +38,9 @@ spec:
         kafka-connect:
           kafka:
             bootstrapServer: kafka-kafka-bootstrap.{{ $.Values.amqstreams.destinationNamespace }}-{{ $loop }}.svc.cluster.local:9092
+        debezium:
+          connectors:
+            globex:
+              database:
+                hostname: globex-db.{{ $.Values.globex.destinationNamespace }}-{{ $loop }}.svc.cluster.local
 {{- end }}
