@@ -28,6 +28,10 @@ spec:
           - name: apicurio-registry-app
             resources:
               {{- toYaml .Values.app.resources | nindent 14 }}
+            livenessProbe:
+              {{- toYaml .Values.app.livenessProbe | nindent 14 }}
+            readinessProbe:
+              {{- toYaml .Values.app.readinessProbe | nindent 14 }} 
   ui:  
     ingress:
       {{ if .Values.ui.route.host }}
