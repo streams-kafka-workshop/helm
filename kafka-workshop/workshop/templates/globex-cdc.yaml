@@ -43,4 +43,5 @@ spec:
             globex:
               database:
                 hostname: globex-db.{{ $.Values.globex.destinationNamespace }}-{{ $loop }}.svc.cluster.local
+          deploy: false
 {{- end }}
