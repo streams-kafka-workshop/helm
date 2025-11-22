@@ -79,5 +79,12 @@ spec:
               name: code-redirect-3
               protocol: http
               targetPort: 13133
-    projects: []
+    projects: 
+      - name: {{ $.Values.devspaces.projectName }}
+        git:
+          remotes:
+            origin: "{{ $.Values.devspaces.projectRepo }}"
+          checkoutFrom:
+            revision: "{{ $.Values.devspaces.projectBranch }}"
+
 {{- end }}

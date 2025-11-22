@@ -12,6 +12,9 @@ devspaces:
   templateName: che-code-workspace
   workspaceName: kafka-workshop
   image: quay.io/kafka-workshop/devspaces-image:0e90287
+  projectName: kafka-workshop
+  projectRepo: https://github.com/streams-kafka-workshop/kafka-workshop-dev-spaces.git
+  projectBranch: main
 
 subDomain:
 
