@@ -23,3 +23,6 @@ dependencies:
   - name: globex-web
     version: 0.1.0
     repository: file://globex-web
+  - name: order-simulator
+    version: 0.1.0
+    repository: file://order-simulator
