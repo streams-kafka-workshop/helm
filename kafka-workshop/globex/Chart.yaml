@@ -23,6 +23,9 @@ dependencies:
   - name: globex-web
     version: 0.1.0
     repository: file://globex-web
+  - name: activity-tracking-simulator
+    version: 0.1.0
+    repository: file://activity-tracking-simulator 
   - name: order-simulator
     version: 0.1.0
     repository: file://order-simulator
