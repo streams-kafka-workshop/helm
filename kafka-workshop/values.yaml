@@ -1,27 +1,27 @@
 workshop:
   gitops:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   amqstreams:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   keycloak:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   globex:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   service_registry:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   globex_cdc:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   argocd:
     namespace:
@@ -42,7 +42,7 @@ workshop:
 devspaces:
   devspaces:
     source:
-      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      repoUrl: https://github.com/stencell/kafka-workshop.git
       targetRevision: main
   argocd:
     devspaces:
