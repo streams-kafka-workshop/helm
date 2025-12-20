@@ -1,0 +1,72 @@
+{{- if .Values.operatorPatch.enabled }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "service-registry-operator.name" . }}-patch-sa
+  namespace: {{ include "service-registry-operator.namespace" . }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "service-registry-operator.name" . }}-patch-role
+  namespace: {{ include "service-registry-operator.namespace" . }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "service-registry-operator.name" . }}-patch-rb
+  namespace: {{ include "service-registry-operator.namespace" . }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "service-registry-operator.name" . }}-patch-sa
+    namespace: {{ include "service-registry-operator.namespace" . }}
+roleRef:
+  kind: Role
+  name: {{ include "service-registry-operator.name" . }}-patch-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "service-registry-operator.name" . }}-patch-liveness
+  namespace: {{ include "service-registry-operator.namespace" . }}
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 10
+  template:
+    spec:
+      serviceAccountName: {{ include "service-registry-operator.name" . }}-patch-sa
+      restartPolicy: OnFailure
+      containers:
+        - name: patch
+          image: {{ .Values.operatorPatch.image }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for deployment {{ .Values.operatorPatch.deploymentName }}..."
+              until oc get deployment {{ .Values.operatorPatch.deploymentName }} -n {{ include "service-registry-operator.namespace" . }} 2>/dev/null; do
+                sleep 5
+              done
+              oc patch deployment {{ .Values.operatorPatch.deploymentName }} \
+                -n {{ include "service-registry-operator.namespace" . }} \
+                --type=json \
+                -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/livenessProbe/initialDelaySeconds", "value": {{ .Values.operatorPatch.livenessProbe.initialDelaySeconds }}}]'
+{{- end }}

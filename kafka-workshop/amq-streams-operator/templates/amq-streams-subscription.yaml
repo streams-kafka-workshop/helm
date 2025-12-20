@@ -12,3 +12,10 @@ spec:
   name: {{ .Values.subscription.name }}
   source: {{ .Values.subscription.source }}
   sourceNamespace: {{ .Values.subscription.sourceNamespace }}
+  {{- if .Values.subscription.config }}
+  config:
+    {{- with .Values.subscription.config.resources }}
+    resources:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+  {{- end }}

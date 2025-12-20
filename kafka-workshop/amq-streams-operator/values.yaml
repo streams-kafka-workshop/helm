@@ -9,6 +9,12 @@ subscription:
   name: amq-streams
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  config:
+    resources:
+      requests:
+        memory: 384Mi
+      limits:
+        memory: 1Gi
 
 argocd:
   enabled: true

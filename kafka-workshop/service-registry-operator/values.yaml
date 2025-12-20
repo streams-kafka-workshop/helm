@@ -14,3 +14,10 @@ argocd:
   enabled: true
   operator:
     syncwave: "-2"
+
+operatorPatch:
+  enabled: true
+  image: registry.redhat.io/openshift4/ose-cli:latest
+  deploymentName: apicurio-registry-operator-v3.1.0-r1
+  livenessProbe:
+    initialDelaySeconds: 90
