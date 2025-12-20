@@ -15,7 +15,7 @@ resources:
     cpu: 500m
     memory: 1Gi
 livenessProbe:
-  initialDelaySeconds: 45
+  initialDelaySeconds: 90
   timeoutSeconds: 5
 readinessProbe:
   initialDelaySeconds: 15
