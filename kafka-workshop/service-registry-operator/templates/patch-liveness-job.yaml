@@ -20,7 +20,7 @@ metadata:
 rules:
   - apiGroups: ["apps"]
     resources: ["deployments"]
-    verbs: ["get", "patch"]
+    verbs: ["get", "list", "patch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -61,12 +61,25 @@ spec:
             - /bin/sh
             - -c
             - |
-              echo "Waiting for deployment {{ .Values.operatorPatch.deploymentName }}..."
-              until oc get deployment {{ .Values.operatorPatch.deploymentName }} -n {{ include "service-registry-operator.namespace" . }} 2>/dev/null; do
+              set -e
+              NS="{{ include "service-registry-operator.namespace" . }}"
+              LIVENESS_DELAY="{{ .Values.operatorPatch.livenessProbe.initialDelaySeconds }}"
+              READINESS_DELAY="{{ .Values.operatorPatch.readinessProbe.initialDelaySeconds }}"
+              READINESS_FAILURES="{{ .Values.operatorPatch.readinessProbe.failureThreshold }}"
+              STARTUP_DELAY="{{ .Values.operatorPatch.startupProbe.initialDelaySeconds }}"
+              STARTUP_FAILURES="{{ .Values.operatorPatch.startupProbe.failureThreshold }}"
+              SELECTOR='{{ .Values.operatorPatch.deploymentSelector }}'
+              echo "Waiting for deployment with selector: ${SELECTOR}..."
+              until DEPLOY=$(oc get deployment -n "${NS}" -l "${SELECTOR}" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null) && [ -n "${DEPLOY}" ]; do
                 sleep 5
               done
-              oc patch deployment {{ .Values.operatorPatch.deploymentName }} \
-                -n {{ include "service-registry-operator.namespace" . }} \
-                --type=json \
-                -p '[{"op": "replace", "path": "/spec/template/spec/containers/0/livenessProbe/initialDelaySeconds", "value": {{ .Values.operatorPatch.livenessProbe.initialDelaySeconds }}}]'
+              echo "Found deployment: ${DEPLOY}"
+              oc patch deployment "${DEPLOY}" -n "${NS}" --type=json -p '[
+                {"op": "replace", "path": "/spec/template/spec/containers/0/livenessProbe/initialDelaySeconds", "value": '"${LIVENESS_DELAY}"'},
+                {"op": "replace", "path": "/spec/template/spec/containers/0/readinessProbe/initialDelaySeconds", "value": '"${READINESS_DELAY}"'},
+                {"op": "replace", "path": "/spec/template/spec/containers/0/readinessProbe/failureThreshold", "value": '"${READINESS_FAILURES}"'},
+                {"op": "replace", "path": "/spec/template/spec/containers/0/startupProbe/initialDelaySeconds", "value": '"${STARTUP_DELAY}"'},
+                {"op": "replace", "path": "/spec/template/spec/containers/0/startupProbe/failureThreshold", "value": '"${STARTUP_FAILURES}"'}
+              ]'
+              echo "Patched livenessProbe.initialDelaySeconds=${LIVENESS_DELAY}, readinessProbe.initialDelaySeconds=${READINESS_DELAY}, readinessProbe.failureThreshold=${READINESS_FAILURES}, startupProbe.initialDelaySeconds=${STARTUP_DELAY}, startupProbe.failureThreshold=${STARTUP_FAILURES}"
 {{- end }}

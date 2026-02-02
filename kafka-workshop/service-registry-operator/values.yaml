@@ -18,6 +18,14 @@ argocd:
 operatorPatch:
   enabled: true
   image: registry.redhat.io/openshift4/ose-cli:latest
-  deploymentName: apicurio-registry-operator-v3.1.0-r1
+  # Discover deployment by label selector (future-proof across operator upgrades).
+  deploymentSelector: "app.kubernetes.io/name=apicurio-registry-operator"
   livenessProbe:
     initialDelaySeconds: 90
+  readinessProbe:
+    initialDelaySeconds: 90
+    failureThreshold: 10
+  # Startup probe: gives operator more time before /q/health/started is checked (avoids "connection refused" crash loop)
+  startupProbe:
+    initialDelaySeconds: 90
+    failureThreshold: 30
