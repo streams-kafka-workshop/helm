@@ -18,9 +18,12 @@ metadata:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
 rules:
+  - apiGroups: ["operators.coreos.com"]
+    resources: ["clusterserviceversions"]
+    verbs: ["get", "list", "patch"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
-    verbs: ["get", "list", "patch"]
+    verbs: ["get", "list", "delete"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -63,23 +66,50 @@ spec:
             - |
               set -e
               NS="{{ include "service-registry-operator.namespace" . }}"
+              CSV_PATTERN="{{ .Values.operatorPatch.csvNamePattern }}"
+              DEPLOY_SELECTOR="{{ .Values.operatorPatch.deploymentSelector }}"
               LIVENESS_DELAY="{{ .Values.operatorPatch.livenessProbe.initialDelaySeconds }}"
               READINESS_DELAY="{{ .Values.operatorPatch.readinessProbe.initialDelaySeconds }}"
               READINESS_FAILURES="{{ .Values.operatorPatch.readinessProbe.failureThreshold }}"
               STARTUP_DELAY="{{ .Values.operatorPatch.startupProbe.initialDelaySeconds }}"
               STARTUP_FAILURES="{{ .Values.operatorPatch.startupProbe.failureThreshold }}"
-              SELECTOR='{{ .Values.operatorPatch.deploymentSelector }}'
-              echo "Waiting for deployment with selector: ${SELECTOR}..."
-              until DEPLOY=$(oc get deployment -n "${NS}" -l "${SELECTOR}" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null) && [ -n "${DEPLOY}" ]; do
+              TIMEOUT=300
+              ELAPSED=0
+
+              echo "Waiting for CSV matching '${CSV_PATTERN}' in namespace ${NS}..."
+              until CSV=$(oc get csv -n "${NS}" -o jsonpath='{.items[*].metadata.name}' 2>/dev/null | tr ' ' '\n' | grep "${CSV_PATTERN}" | head -1) && [ -n "${CSV}" ]; do
+                if [ "${ELAPSED}" -ge "${TIMEOUT}" ]; then
+                  echo "ERROR: Timed out after ${TIMEOUT}s waiting for CSV matching '${CSV_PATTERN}'"
+                  echo "Available CSVs:"
+                  oc get csv -n "${NS}" 2>/dev/null || true
+                  exit 1
+                fi
                 sleep 5
+                ELAPSED=$((ELAPSED + 5))
               done
-              echo "Found deployment: ${DEPLOY}"
-              oc patch deployment "${DEPLOY}" -n "${NS}" --type=json -p '[
-                {"op": "replace", "path": "/spec/template/spec/containers/0/livenessProbe/initialDelaySeconds", "value": '"${LIVENESS_DELAY}"'},
-                {"op": "replace", "path": "/spec/template/spec/containers/0/readinessProbe/initialDelaySeconds", "value": '"${READINESS_DELAY}"'},
-                {"op": "replace", "path": "/spec/template/spec/containers/0/readinessProbe/failureThreshold", "value": '"${READINESS_FAILURES}"'},
-                {"op": "replace", "path": "/spec/template/spec/containers/0/startupProbe/initialDelaySeconds", "value": '"${STARTUP_DELAY}"'},
-                {"op": "replace", "path": "/spec/template/spec/containers/0/startupProbe/failureThreshold", "value": '"${STARTUP_FAILURES}"'}
+              echo "Found CSV: ${CSV}"
+
+              echo "Patching CSV probe settings..."
+              oc patch csv "${CSV}" -n "${NS}" --type=json -p '[
+                {"op": "add", "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/startupProbe/initialDelaySeconds", "value": '"${STARTUP_DELAY}"'},
+                {"op": "add", "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/startupProbe/failureThreshold", "value": '"${STARTUP_FAILURES}"'},
+                {"op": "add", "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/livenessProbe/initialDelaySeconds", "value": '"${LIVENESS_DELAY}"'},
+                {"op": "add", "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/readinessProbe/initialDelaySeconds", "value": '"${READINESS_DELAY}"'},
+                {"op": "add", "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/readinessProbe/failureThreshold", "value": '"${READINESS_FAILURES}"'}
               ]'
-              echo "Patched livenessProbe.initialDelaySeconds=${LIVENESS_DELAY}, readinessProbe.initialDelaySeconds=${READINESS_DELAY}, readinessProbe.failureThreshold=${READINESS_FAILURES}, startupProbe.initialDelaySeconds=${STARTUP_DELAY}, startupProbe.failureThreshold=${STARTUP_FAILURES}"
+              echo "Patched CSV: startupProbe(delay=${STARTUP_DELAY}, failures=${STARTUP_FAILURES}), livenessProbe(delay=${LIVENESS_DELAY}), readinessProbe(delay=${READINESS_DELAY}, failures=${READINESS_FAILURES})"
+
+              echo "Deleting operator Deployment to force OLM to recreate from patched CSV..."
+              DEPLOY=$(oc get deployment -n "${NS}" -l "${DEPLOY_SELECTOR}" -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || true)
+              if [ -n "${DEPLOY}" ]; then
+                oc delete deployment "${DEPLOY}" -n "${NS}"
+                echo "Deleted deployment ${DEPLOY}"
+              else
+                echo "No deployment found with selector '${DEPLOY_SELECTOR}' — OLM will create it from the patched CSV"
+              fi
+
+              echo "Waiting for OLM to recreate the Deployment..."
+              sleep 15
+              STARTUP=$(oc get deployment -n "${NS}" -l "${DEPLOY_SELECTOR}" -o jsonpath='{.items[0].spec.template.spec.containers[0].startupProbe.initialDelaySeconds}' 2>/dev/null || echo "NOT_FOUND")
+              echo "Verification — startupProbe.initialDelaySeconds: ${STARTUP}"
 {{- end }}
