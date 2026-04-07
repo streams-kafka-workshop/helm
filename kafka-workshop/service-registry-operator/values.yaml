@@ -18,7 +18,9 @@ argocd:
 operatorPatch:
   enabled: true
   image: registry.redhat.io/openshift4/ose-cli:latest
-  # Discover deployment by label selector (future-proof across operator upgrades).
+  # Pattern to find the CSV by name (grep match).
+  csvNamePattern: apicurio-registry
+  # Label selector used to find/delete the operator Deployment after CSV patch.
   deploymentSelector: "app.kubernetes.io/name=apicurio-registry-operator"
   livenessProbe:
     initialDelaySeconds: 90
