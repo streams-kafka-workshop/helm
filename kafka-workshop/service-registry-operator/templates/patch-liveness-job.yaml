@@ -89,6 +89,18 @@ spec:
               done
               echo "Found CSV: ${CSV}"
 
+              echo "Waiting for CSV to reach Succeeded phase..."
+              until [ "$(oc get csv "${CSV}" -n "${NS}" -o jsonpath='{.status.phase}' 2>/dev/null)" = "Succeeded" ]; do
+                if [ "${ELAPSED}" -ge "${TIMEOUT}" ]; then
+                  echo "ERROR: Timed out waiting for CSV to reach Succeeded phase"
+                  echo "Current phase: $(oc get csv "${CSV}" -n "${NS}" -o jsonpath='{.status.phase}' 2>/dev/null || echo 'unknown')"
+                  exit 1
+                fi
+                sleep 5
+                ELAPSED=$((ELAPSED + 5))
+              done
+              echo "CSV phase: Succeeded — OLM finished installing"
+
               echo "Patching CSV probe settings..."
               oc patch csv "${CSV}" -n "${NS}" --type=json -p '[
                 {"op": "add", "path": "/spec/install/spec/deployments/0/spec/template/spec/containers/0/startupProbe/initialDelaySeconds", "value": '"${STARTUP_DELAY}"'},
