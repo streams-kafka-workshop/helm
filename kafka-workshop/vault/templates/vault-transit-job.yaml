@@ -1,0 +1,50 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-transit-setup
+  namespace: {{ include "vault-wrapper.namespace" . }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    argocd.argoproj.io/hook: PostSync
+spec:
+  backoffLimit: 10
+  template:
+    spec:
+      restartPolicy: OnFailure
+      initContainers:
+        - name: wait-for-vault
+          image: {{ .Values.vaultImage }}
+          env:
+            - name: VAULT_ADDR
+              value: "http://vault.{{ include "vault-wrapper.namespace" . }}.svc.cluster.local:8200"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              until vault status > /dev/null 2>&1; do
+                echo "Waiting for Vault to be ready..."
+                sleep 5
+              done
+              echo "Vault is ready"
+      containers:
+        - name: setup-transit
+          image: {{ .Values.vaultImage }}
+          env:
+            - name: VAULT_ADDR
+              value: "http://vault.{{ include "vault-wrapper.namespace" . }}.svc.cluster.local:8200"
+            - name: VAULT_TOKEN
+              value: "myroottoken"
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Enabling Transit secrets engine..."
+              vault secrets enable transit 2>/dev/null || echo "Transit engine already enabled"
+
+              {{- range .Values.topics }}
+              echo "Creating KEK for topic: {{ . }}"
+              vault write -f transit/keys/KEK-{{ . }}
+              {{- end }}
+
+              echo "Vault Transit setup complete"

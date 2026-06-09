@@ -1,4 +1,21 @@
+proxy-operator:
+  argocd:
+    operator:
+      syncwave: "-2"
+
+vault:
+  vault:
+    global:
+      namespace: kms
+  argocd:
+    vault:
+      syncwave: "-1"
+
 workshop:
+  proxy:
+    source:
+      repoUrl: https://github.com/streams-kafka-workshop/helm.git
+      targetRevision: main
   gitops:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
@@ -27,7 +44,7 @@ workshop:
     namespace:
       syncwave: "-1"
     gitops:
-      syncwave: "-1" 
+      syncwave: "-1"
     amqstreams:
       syncwave: "0"
     keycloak:
@@ -37,6 +54,8 @@ workshop:
     service_registry:
       syncwave: "1"
     globex_cdc:
+      syncwave: "2"
+    proxy:
       syncwave: "2"
 
 devspaces:

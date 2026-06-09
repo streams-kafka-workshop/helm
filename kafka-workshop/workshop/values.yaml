@@ -77,11 +77,21 @@ globex_cdc:
     targetRevision:
     path: kafka-workshop/globex-cdc
 
+proxy:
+  applicationName: kafka-proxy
+  applicationNamespace: gitops
+  destinationNamespace: proxy
+  source:
+    repoUrl:
+    targetRevision:
+    path: kafka-workshop/kafka-proxy
+
 namespaces:
   - name: kafka
   - name: globex
   - name: service-registry
   - name: globex-cdc
+  - name: proxy
 
 argocd:
   enabled: true
@@ -98,4 +108,6 @@ argocd:
   service_registry:
     syncwave: "1"
   globex_cdc:
+    syncwave: "2"
+  proxy:
     syncwave: "2"

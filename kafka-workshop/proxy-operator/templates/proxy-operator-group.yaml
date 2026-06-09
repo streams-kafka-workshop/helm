@@ -1,0 +1,9 @@
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: {{ include "proxy-operator.name" . }}
+  namespace: {{ include "proxy-operator.namespace" . }}
+  annotations:
+    {{- include "proxy-operator.argocd-syncwave" . | nindent 4 }}
+spec: {}

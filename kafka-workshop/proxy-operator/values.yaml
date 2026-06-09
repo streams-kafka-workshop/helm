@@ -1,0 +1,25 @@
+nameOverride: "proxy-operator"
+fullnameOverride: ""
+
+namespace: amq-streams-proxy
+
+subscription:
+  channel: stable
+  installPlanApproval: Automatic
+  name: amq-streams-proxy
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  config:
+    resources:
+      requests:
+        memory: 1Gi
+      limits:
+        memory: 1Gi
+    env:
+      - name: JAVA_TOOL_OPTIONS
+        value: "-Xmx512m"
+
+argocd:
+  enabled: true
+  operator:
+    syncwave: "-2"

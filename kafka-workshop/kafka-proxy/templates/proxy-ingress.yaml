@@ -1,0 +1,11 @@
+---
+kind: KafkaProxyIngress
+apiVersion: kroxylicious.io/v1alpha1
+metadata:
+  name: {{ .Values.ingress.name }}
+  namespace: {{ include "kafka-proxy.namespace" . }}
+spec:
+  proxyRef:
+    name: {{ .Values.proxy.name }}
+  clusterIP:
+    protocol: {{ .Values.ingress.protocol }}

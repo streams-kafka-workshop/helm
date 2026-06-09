@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ include "vault-wrapper.namespace" . }}
+  labels:
+    app.kubernetes.io/name: vault
+    app.kubernetes.io/component: kms
+  annotations:
+    {{- include "vault-wrapper.argocd-syncwave" . | nindent 4 }}

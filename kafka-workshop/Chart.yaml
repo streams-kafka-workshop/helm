@@ -20,6 +20,12 @@ dependencies:
   - name: service-registry-operator
     version: 0.1.0
     repository: file://service-registry-operator
+  - name: proxy-operator
+    version: 0.1.0
+    repository: file://proxy-operator
+  - name: vault
+    version: 0.1.0
+    repository: file://vault
   - name: workshop
     version: 0.1.0
     repository: file://workshop

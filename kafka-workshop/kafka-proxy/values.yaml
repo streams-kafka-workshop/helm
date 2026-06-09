@@ -1,0 +1,21 @@
+proxy:
+  name: simple
+
+ingress:
+  name: cluster-ip
+  protocol: TCP
+
+filter:
+  name: encryption
+  vaultToken: myroottoken
+  vaultTransitEngineUrl: http://vault.kms.svc.cluster.local:8200/v1/transit
+  kekTemplate: "KEK-$(topicName)"
+
+kafkaService:
+  name: my-cluster
+  bootstrapServers: kafka-kafka-bootstrap.kafka.svc:9092
+  nodeIdRangeStart: 0
+  nodeIdRangeEnd: 2
+
+virtualCluster:
+  name: my-cluster

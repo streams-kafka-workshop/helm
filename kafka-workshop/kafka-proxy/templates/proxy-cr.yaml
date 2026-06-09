@@ -1,0 +1,7 @@
+---
+kind: KafkaProxy
+apiVersion: kroxylicious.io/v1alpha1
+metadata:
+  name: {{ .Values.proxy.name }}
+  namespace: {{ include "kafka-proxy.namespace" . }}
+spec: {}

@@ -1,0 +1,35 @@
+nameOverride: "vault"
+fullnameOverride: ""
+
+namespace: kms
+
+vault:
+  global:
+    openshift: true
+    namespace: kms
+  server:
+    dev:
+      enabled: true
+      devRootToken: myroottoken
+    extraEnvironmentVars:
+      SKIP_SETCAP: "true"
+    image:
+      repository: docker.io/hashicorp/vault
+  injector:
+    image:
+      repository: docker.io/hashicorp/vault-k8s
+    agentImage:
+      repository: docker.io/hashicorp/vault
+
+openshift:
+  enabled: true
+
+topics:
+  - trades
+
+vaultImage: docker.io/hashicorp/vault:1.19.0
+
+argocd:
+  enabled: true
+  vault:
+    syncwave: "-1"
