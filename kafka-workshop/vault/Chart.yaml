@@ -4,7 +4,3 @@ description: A Helm chart for HashiCorp Vault with Transit engine for Kafka reco
 type: application
 version: 0.1.0
 
-dependencies:
-  - name: vault
-    version: 0.32.0
-    repository: https://helm.releases.hashicorp.com

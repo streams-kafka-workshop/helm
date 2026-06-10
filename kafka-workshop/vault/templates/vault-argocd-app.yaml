@@ -1,0 +1,49 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: vault
+  namespace: {{ .Values.vaultApp.applicationNamespace }}
+  annotations:
+    {{- include "vault-wrapper.argocd-syncwave" . | nindent 4 }}
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io/foreground
+spec:
+  destination:
+    name: ""
+    namespace: {{ include "vault-wrapper.namespace" . }}
+    server: 'https://kubernetes.default.svc'
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m0s
+      limit: 10
+    syncOptions:
+      - RespectIgnoreDifferences=true
+  source:
+    chart: vault
+    repoURL: {{ .Values.vaultApp.repoURL }}
+    targetRevision: {{ .Values.vaultApp.chartVersion }}
+    helm:
+      valuesObject:
+        global:
+          openshift: {{ .Values.vault.global.openshift }}
+        server:
+          dev:
+            enabled: {{ .Values.vault.server.dev.enabled }}
+            devRootToken: {{ .Values.vault.server.dev.devRootToken }}
+          extraEnvironmentVars:
+            SKIP_SETCAP: "true"
+          image:
+            repository: {{ .Values.vault.server.image.repository }}
+        injector:
+          image:
+            repository: {{ .Values.vault.injector.image.repository }}
+          agentImage:
+            repository: {{ .Values.vault.injector.agentImage.repository }}

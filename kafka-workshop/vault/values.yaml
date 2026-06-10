@@ -3,6 +3,11 @@ fullnameOverride: ""
 
 namespace: kms
 
+vaultApp:
+  chartVersion: "0.32.0"
+  repoURL: https://helm.releases.hashicorp.com
+  applicationNamespace: openshift-gitops
+
 vault:
   global:
     openshift: true
