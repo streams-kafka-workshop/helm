@@ -15,7 +15,7 @@ workshop:
   proxy:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
-      targetRevision: main
+      targetRevision: proxy
   gitops:
     source:
       repoUrl: https://github.com/streams-kafka-workshop/helm.git
