@@ -1,0 +1,32 @@
+{{- if .Values.openshift.enabled }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-scc-anyuid
+  annotations:
+    {{- include "vault-wrapper.argocd-syncwave" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: vault
+    namespace: {{ include "vault-wrapper.namespace" . }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: vault-agent-injector-scc-anyuid
+  annotations:
+    {{- include "vault-wrapper.argocd-syncwave" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: vault-agent-injector
+    namespace: {{ include "vault-wrapper.namespace" . }}
+roleRef:
+  kind: ClusterRole
+  name: system:openshift:scc:anyuid
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

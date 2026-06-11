@@ -165,3 +165,18 @@ argocd.argoproj.io/sync-wave: "{{ .Values.argocd.globex_cdc.syncwave }}"
 {{- "{}" }}
 {{- end }}
 {{- end }}
+
+{{/*
+ArgoCD Syncwave
+*/}}
+{{- define "workshop.proxy.argocd-syncwave" -}}
+{{- if .Values.argocd }}
+{{- if and (.Values.argocd.proxy) (.Values.argocd.proxy.syncwave) (.Values.argocd.enabled) -}}
+argocd.argoproj.io/sync-wave: "{{ .Values.argocd.proxy.syncwave }}"
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- else }}
+{{- "{}" }}
+{{- end }}
+{{- end }}

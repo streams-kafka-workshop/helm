@@ -1,0 +1,17 @@
+---
+kind: KafkaProtocolFilter
+apiVersion: kroxylicious.io/v1alpha1
+metadata:
+  name: {{ .Values.filter.name }}
+  namespace: {{ include "kafka-proxy.namespace" . }}
+spec:
+  type: io.kroxylicious.filter.encryption.RecordEncryption
+  configTemplate:
+    kms: VaultKmsService
+    kmsConfig:
+      vaultToken:
+        password: {{ .Values.filter.vaultToken }}
+      vaultTransitEngineUrl: {{ .Values.filter.vaultTransitEngineUrl }}
+    selector: TemplateKekSelector
+    selectorConfig:
+      template: {{ .Values.filter.kekTemplate | quote }}

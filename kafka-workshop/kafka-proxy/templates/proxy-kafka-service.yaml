@@ -1,0 +1,11 @@
+---
+kind: KafkaService
+apiVersion: kroxylicious.io/v1alpha1
+metadata:
+  name: {{ .Values.kafkaService.name }}
+  namespace: {{ include "kafka-proxy.namespace" . }}
+spec:
+  bootstrapServers: {{ .Values.kafkaService.bootstrapServers }}
+  nodeIdRanges:
+    - start: {{ .Values.kafkaService.nodeIdRangeStart }}
+      end: {{ .Values.kafkaService.nodeIdRangeEnd }}

@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ include "proxy-operator.namespace" . }}
+  labels:
+    app.kubernetes.io/name: amq-streams-proxy
+    app.kubernetes.io/component: operator
+  annotations:
+    {{- include "proxy-operator.argocd-syncwave" . | nindent 4 }}

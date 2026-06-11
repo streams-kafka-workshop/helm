@@ -1,0 +1,16 @@
+---
+kind: VirtualKafkaCluster
+apiVersion: kroxylicious.io/v1alpha1
+metadata:
+  name: {{ .Values.virtualCluster.name }}
+  namespace: {{ include "kafka-proxy.namespace" . }}
+spec:
+  proxyRef:
+    name: {{ .Values.proxy.name }}
+  targetKafkaServiceRef:
+    name: {{ .Values.kafkaService.name }}
+  filterRefs:
+    - name: {{ .Values.filter.name }}
+  ingresses:
+    - ingressRef:
+        name: {{ .Values.ingress.name }}
