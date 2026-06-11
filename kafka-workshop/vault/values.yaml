@@ -30,7 +30,7 @@ openshift:
   enabled: true
 
 topics:
-  - trades
+  - customer-payments
 
 vaultImage: docker.io/hashicorp/vault:1.19.0
 
